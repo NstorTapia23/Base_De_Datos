@@ -1,0 +1,2 @@
+ALTER TABLE "estudiantado" ADD COLUMN "carnet_identidad" varchar NOT NULL;--> statement-breakpoint
+ALTER TABLE "estudiantado" ADD CONSTRAINT "estudiantado_carnet_identidad_unique" UNIQUE("carnet_identidad");

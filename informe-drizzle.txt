@@ -1,0 +1,185 @@
+================================================================================
+  INFORME: Drizzle ORM en el Proyecto Catherine Nestor (Gesti�n de Tesis)
+================================================================================
+
+1. �QU� ES DRIZZLE ORM?
+--------------------------------------------------------------------------------
+Drizzle ORM es un ORM (Object-Relational Mapping) moderno para TypeScript,
+dise�ado con un enfoque "SQL-like" y tipado fuerte. A diferencia de ORMs
+tradicionales como Prisma o TypeORM, Drizzle no oculta el SQL detr�s de una
+capa de abstracci�n compleja; en su lugar, expone una API que se asemeja mucho
+a escribir SQL directamente, pero con toda la seguridad de tipos que ofrece
+TypeScript.
+
+Sitio oficial: https://orm.drizzle.team
+
+
+2. CARACTER�STICAS PRINCIPALES
+--------------------------------------------------------------------------------
+- TypeScript-first: Todo el schema se define en c�digo TypeScript, y los
+  tipos se infieren autom�ticamente. No hay archivos .prisma ni generadores
+  de c�digo externos.
+
+- SQL-like API: Las queries se escriben de forma muy similar a SQL:
+    db.select().from(tabla).where(eq(tabla.id, 1))
+
+- Multi-dialecto: Soporta PostgreSQL, MySQL, SQLite, Turso, D1, etc.
+
+- Migraciones con drizzle-kit: Permite generar y ejecutar migraciones
+  autom�ticamente a partir del schema TypeScript.
+
+- Driver-agn�stico: Se conecta a la BD a trav�s de drivers est�ndar
+  (pg, mysql2, better-sqlite3, etc.), sin capas pesadas intermedias.
+
+- Relaciones expl�citas: Las relaciones entre tablas se definen de forma
+  manual y se resuelven en el momento de la query (no hay carga diferida
+  autom�tica ni N+1 oculto).
+
+- Tama�o reducido: Es significativamente m�s ligero que Prisma o TypeORM,
+  lo que lo hace ideal para serverless y Edge Functions.
+
+
+3. CONTEXTO DEL PROYECTO
+--------------------------------------------------------------------------------
+- Framework: Next.js (App Router) con TypeScript
+- Base de datos: PostgreSQL (local, en puerto 5432)
+- ORM actual: Drizzle ORM v0.45.2 + drizzle-kit v0.31.10
+- Driver: pg (node-postgres)
+- Schema: Definido en DB/schema.ts (11 tablas: departamentos, profesores,
+  facultades, carreras, modalidades, cursabilidad, tipo_trabajo, estudiantado,
+  trabajo_diploma, cortes_tesis, corte_tesis_profesor)
+- Uso actual: Se mezcla Drizzle ORM (para inserts, updates, deletes y
+  conteos simples) con SQL directo v�a pool.query() (para consultas con
+  JOINs complejos, subconsultas y opciones de formularios).
+
+
+4. PROS DE USAR DRIZZLE ORM EN ESTE PROYECTO
+--------------------------------------------------------------------------------
+ 4.1. Tipado fuerte y autocompletado
+      + Todo el schema est� tipado. Al hacer db.select().from(Tabla), el
+        resultado es autom�ticamente tipado. Esto reduce errores en tiempo
+        de compilaci�n.
+      + Beneficio directo: menos bugs en producci�n y mejor DX (Developer
+        Experience).
+
+ 4.2. API SQL-like y familiar
+      + Para alguien que sabe SQL, Drizzle es casi intuitivo. La sintaxis
+        se parece a SQL, por lo que la curva de aprendizaje es baja.
+      + En este proyecto, el equipo ya usa SQL directo para los JOINs
+        complejos, lo que indica familiaridad con SQL.
+
+ 4.3. Migraciones declarativas
+      + drizzle-kit genera migraciones a partir del schema TS. Esto da
+        control de versiones sobre la estructura de la BD y permite
+        reproducir el esquema en cualquier entorno.
+      + Ya hay migraciones generadas en /drizzle/, lo que demuestra que
+        esta funcionalidad est� activa y funcionando.
+
+ 4.4. Ligereza y rendimiento
+      + Drizzle es extremadamente ligero comparado con Prisma. No tiene
+        engine binario, no genera carpetas enormes, y las queries son
+        planos SQL simples sin capas de abstracci�n pesadas.
+      + Ideal para Next.js en entornos serverless/Edge donde el tama�o
+        del bundle importa.
+
+ 4.5. Flexibilidad para usar SQL directo
+      + Drizzle no impide usar SQL en crudo. Se puede intercalar queries
+        del ORM con pool.query() sin problemas, justo como se hace en
+        lib/queries.ts. Esto permite usar el ORM donde es �til y SQL
+        directo donde se necesita m�s control.
+
+ 4.6. Relaciones expl�citas
+      + No hay sorpresas con lazy loading o N+1. Las relaciones se
+        resuelven en el momento y de la forma que el desarrollador
+        especifica. Esto da control total sobre el rendimiento.
+
+ 4.7. Ecosistema TypeScript
+      + Se integra de forma natural con Next.js, TypeScript y las
+        Server Actions. No requiere configuraci�n adicional ni plugins.
+
+ 4.8. Buen soporte para PostgreSQL
+      + Drizzle tiene soporte nativo para caracter�sticas de PostgreSQL
+        como serial, timestamp with timezone, unique constraints,
+        foreign keys, etc., todo lo cual ya se usa en el schema del
+        proyecto.
+
+
+5. CONTRAS DE USAR DRIZZLE ORM EN ESTE PROYECTO
+--------------------------------------------------------------------------------
+ 5.1. Uso h�brido (ORM + SQL directo)
+      - Aunque Drizzle permite SQL directo, el hecho de que se est� usando
+        pool.query() para los JOINs complejos sugiere que Drizzle no
+        simplifica lo suficiente esas consultas.
+      - Esto lleva a tener dos estilos de c�digo en el mismo proyecto:
+        unas queries van por Drizzle y otras por SQL directo, lo que puede
+        confundir a nuevos desarrolladores y duplicar l�gica.
+
+ 5.2. Relaciones manuales
+      - A diferencia de Prisma, donde las relaciones se declaran una vez
+        y se navegan con sintaxis simple (ej. include, select anidado),
+        en Drizzle hay que escribir los JOINs manualmente.
+      - Esto explica por qu� en lib/queries.ts se opt� por SQL directo con
+        pool.query() para listar registros con JOINs. Drizzle no ofrece
+        una forma tan c�moda de hacer ``eager loading`` de relaciones.
+
+ 5.3. Comunidad y ecosistema m�s peque�o
+      - Comparado con Prisma (que domina el ecosistema ORM en Node.js),
+        Drizzle tiene menos tutoriales, menos ejemplos, menos plugins y
+        una comunidad m�s reducida.
+      - Esto puede dificultar la resoluci�n de problemas o la b�squeda de
+        bibliotecas complementarias.
+
+ 5.4. Documentaci�n mejorable
+      - La documentaci�n de Drizzle es funcional pero menos detallada que
+        la de Prisma. Algunos casos de uso avanzados (como subconsultas
+        complejas o polimorfismo) est�n pobremente documentados.
+
+ 5.5. Sin panel de administraci�n visual
+      - Prisma tiene Prisma Studio (interfaz gr�fica para explorar la BD).
+      - Drizzle no tiene un equivalente oficial. Aunque drizzle-kit puede
+        generar migraciones, no hay herramienta visual para inspeccionar
+        o editar datos.
+
+ 5.6. Madurez relativa
+      - Drizzle es m�s reciente que Prisma o TypeORM. Aunque es estable,
+        su ecosistema de herramientas y su adopci�n empresarial son menores.
+
+ 5.7. Curva de aprendizaje para relaciones complejas
+      - Para queries que requieren m�ltiples JOINs, subconsultas anidadas
+        o agregaciones complejas, la API de Drizzle se vuelve verbosa.
+      - En este proyecto, las opciones de formularios con subconsultas
+        (como la de estudiantado que concatena nombre_carrera + nombre_
+        modalidad) se escribieron en SQL directo, lo que refleja esta
+        limitaci�n.
+
+
+6. CONCLUSI�N PARA ESTE PROYECTO
+--------------------------------------------------------------------------------
+Drizzle ORM es una excelente opci�n para este proyecto por su ligereza,
+tipado fuerte e integraci�n natural con Next.js y TypeScript. Su enfoque
+SQL-like es coherente con el hecho de que el equipo ya escribe SQL directo
+para consultas complejas.
+
+Sin embargo, se observa una divisi�n clara en el uso:
+  - Drizzle se usa para operaciones CRUD simples (insert, update, delete,
+    count) donde su API brilla.
+  - SQL directo (pool.query()) se usa para consultas con JOINs m�ltiples
+    y subconsultas, donde Drizzle resulta verboso.
+
+Esto sugiere que, para este proyecto en particular, Drizzle funciona bien
+como capa de abstracci�n para operaciones simples y migraciones, pero no
+elimina por completo la necesidad de escribir SQL. No es un problema en
+s� mismo (Drizzle lo permite), pero rompe la uniformidad del c�digo.
+
+�Veredicto?: Drizzle ORM es adecuado y recomendable para este proyecto,
+pero el equipo deber�a considerar si quiere:
+  a) Aceptar el estilo h�brido (Drizzle + SQL directo) como algo normal,
+  b) Migrar gradualmente todas las queries a Drizzle (posible pero m�s
+     trabajoso para consultas complejas), o
+  c) Evaluar si otro ORM como Prisma (con mejor manejo de relaciones)
+     podr�a reducir la necesidad de SQL directo, a costa de mayor peso
+     y complejidad.
+
+================================================================================
+  Documento generado el 01/07/2026
+================================================================================
