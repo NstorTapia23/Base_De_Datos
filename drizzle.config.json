@@ -1,0 +1,9 @@
+{
+  "schema": "./DB/schema.ts",
+  "out": "./drizzle",
+  "dialect": "postgresql",
+  "dbCredentials": {
+    "url": "postgres://postgres:apc5tdrd@localhost:5432/gestion_de_tesis",
+    "ssl": false
+  }
+}

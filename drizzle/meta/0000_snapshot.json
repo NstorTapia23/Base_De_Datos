@@ -1,0 +1,523 @@
+{
+  "id": "803da551-51f4-4a38-bbfb-95083b030b11",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.carreras": {
+      "name": "carreras",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre_carrera": {
+          "name": "nombre_carrera",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_facultad": {
+          "name": "id_facultad",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "carreras_id_facultad_facultades_id_fk": {
+          "name": "carreras_id_facultad_facultades_id_fk",
+          "tableFrom": "carreras",
+          "tableTo": "facultades",
+          "columnsFrom": [
+            "id_facultad"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "carreras_nombre_carrera_unique": {
+          "name": "carreras_nombre_carrera_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre_carrera"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cortes_tesis": {
+      "name": "cortes_tesis",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_trabajo_diploma": {
+          "name": "id_trabajo_diploma",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_corte": {
+          "name": "numero_corte",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url_archivo": {
+          "name": "url_archivo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cortes_tesis_id_trabajo_diploma_trabajo_diploma_id_fk": {
+          "name": "cortes_tesis_id_trabajo_diploma_trabajo_diploma_id_fk",
+          "tableFrom": "cortes_tesis",
+          "tableTo": "trabajo_diploma",
+          "columnsFrom": [
+            "id_trabajo_diploma"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "cortes_tesis_id_trabajo_diploma_numero_corte_unique": {
+          "name": "cortes_tesis_id_trabajo_diploma_numero_corte_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id_trabajo_diploma",
+            "numero_corte"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cursabilidad_por_carrera": {
+      "name": "cursabilidad_por_carrera",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_carrera": {
+          "name": "id_carrera",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_modalidad": {
+          "name": "id_modalidad",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cursabilidad_por_carrera_id_carrera_carreras_id_fk": {
+          "name": "cursabilidad_por_carrera_id_carrera_carreras_id_fk",
+          "tableFrom": "cursabilidad_por_carrera",
+          "tableTo": "carreras",
+          "columnsFrom": [
+            "id_carrera"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cursabilidad_por_carrera_id_modalidad_modalidades_id_fk": {
+          "name": "cursabilidad_por_carrera_id_modalidad_modalidades_id_fk",
+          "tableFrom": "cursabilidad_por_carrera",
+          "tableTo": "modalidades",
+          "columnsFrom": [
+            "id_modalidad"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.departamentos": {
+      "name": "departamentos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre_departamento": {
+          "name": "nombre_departamento",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.estudiantado": {
+      "name": "estudiantado",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "apellidos": {
+          "name": "apellidos",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_cursabilidad": {
+          "name": "id_cursabilidad",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fecha_ingreso": {
+          "name": "fecha_ingreso",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "estudiantado_id_cursabilidad_cursabilidad_por_carrera_id_fk": {
+          "name": "estudiantado_id_cursabilidad_cursabilidad_por_carrera_id_fk",
+          "tableFrom": "estudiantado",
+          "tableTo": "cursabilidad_por_carrera",
+          "columnsFrom": [
+            "id_cursabilidad"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.facultades": {
+      "name": "facultades",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre_facultad": {
+          "name": "nombre_facultad",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "facultades_nombre_facultad_unique": {
+          "name": "facultades_nombre_facultad_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre_facultad"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.modalidades": {
+      "name": "modalidades",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre_modalidad": {
+          "name": "nombre_modalidad",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duracion_años": {
+          "name": "duracion_años",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.profesores": {
+      "name": "profesores",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre_profesor": {
+          "name": "nombre_profesor",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_departamento": {
+          "name": "id_departamento",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "profesores_id_departamento_departamentos_id_fk": {
+          "name": "profesores_id_departamento_departamentos_id_fk",
+          "tableFrom": "profesores",
+          "tableTo": "departamentos",
+          "columnsFrom": [
+            "id_departamento"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tipo_trabajo": {
+      "name": "tipo_trabajo",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre_trabajo": {
+          "name": "nombre_trabajo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.trabajo_diploma": {
+      "name": "trabajo_diploma",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_estudiante": {
+          "name": "id_estudiante",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_tipo_trabajo": {
+          "name": "id_tipo_trabajo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "trabajo_diploma_id_estudiante_estudiantado_id_fk": {
+          "name": "trabajo_diploma_id_estudiante_estudiantado_id_fk",
+          "tableFrom": "trabajo_diploma",
+          "tableTo": "estudiantado",
+          "columnsFrom": [
+            "id_estudiante"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "trabajo_diploma_id_tipo_trabajo_tipo_trabajo_id_fk": {
+          "name": "trabajo_diploma_id_tipo_trabajo_tipo_trabajo_id_fk",
+          "tableFrom": "trabajo_diploma",
+          "tableTo": "tipo_trabajo",
+          "columnsFrom": [
+            "id_tipo_trabajo"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.corte_tesis_profesor": {
+      "name": "corte_tesis_profesor",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_profesor": {
+          "name": "id_profesor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_corte_tesis": {
+          "name": "id_corte_tesis",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "corte_tesis_profesor_id_profesor_profesores_id_fk": {
+          "name": "corte_tesis_profesor_id_profesor_profesores_id_fk",
+          "tableFrom": "corte_tesis_profesor",
+          "tableTo": "profesores",
+          "columnsFrom": [
+            "id_profesor"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "corte_tesis_profesor_id_corte_tesis_cortes_tesis_id_fk": {
+          "name": "corte_tesis_profesor_id_corte_tesis_cortes_tesis_id_fk",
+          "tableFrom": "corte_tesis_profesor",
+          "tableTo": "cortes_tesis",
+          "columnsFrom": [
+            "id_corte_tesis"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
