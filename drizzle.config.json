@@ -1,9 +1,8 @@
 {
-  "schema": "./DB/schema.ts",
-  "out": "./drizzle",
   "dialect": "postgresql",
+  "schema": "./DB/schema.ts",  
+  "out": "./drizzle",
   "dbCredentials": {
-    "url": "postgres://postgres:apc5tdrd@localhost:5432/gestion_de_tesis",
-    "ssl": false
+    "url": "postgresql://neondb_owner:npg_75AWatyrOnEG@ep-dark-field-attyp9tt-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require"
   }
 }
